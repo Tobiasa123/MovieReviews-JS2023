@@ -73,3 +73,39 @@ exports.getReviewsForMovie = async (req, res) =>{
         res.status(500).json(error);
     }
 }
+
+exports.getAverageRatings = async (req, res) => {
+    try {
+        const averageRatings = await Movie.aggregate([
+            {
+                $lookup: {
+                    from: 'reviews',
+                    localField: '_id',
+                    foreignField: 'movieId',
+                    as: 'reviews'
+                }
+            },
+            {
+                $addFields: {
+                    averageRating: { $avg: '$reviews.rating' }
+                }
+            },
+            {
+                $project: {
+                    _id: 1,
+                    title: 1,
+                    averageRating: {
+                        $ifNull: [
+                            { $round: ['$averageRating', 1] }, 
+                            null
+                        ]
+                    }
+                }
+            }
+        ]);
+
+        res.status(200).json(averageRatings);
+    } catch (error) {
+        res.status(500).json(error);
+    }
+};

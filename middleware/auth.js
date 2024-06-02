@@ -6,7 +6,7 @@ exports.verifyToken = (req, res, next) => {
     if (!token) return res.status(401).json({ error: 'Unauthorized: Token not provided' });
     try {
         const decoded = jwt.verify(token, secretKey);
-        req.userId = decoded.userId; 
+        req.user = decoded; 
         next();
     } catch (error) {
         res.status(401).json({ error: 'Unauthorized: Invalid token' });

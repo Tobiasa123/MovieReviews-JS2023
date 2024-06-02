@@ -3,9 +3,13 @@ const Movie = require('../models/movieModel');
 const User = require('../models/userModel');
 const mongoose = require('mongoose');
 
+//userid is extracted from token not req.body
 exports.createReview = async (req, res) =>{
     try{
-        const { movieId, userId, rating, comment } = req.body;
+        const { movieId, rating, comment } = req.body;
+        
+        //få userid
+        const userId = req.user.userId;
 
         if (!mongoose.Types.ObjectId.isValid(movieId)) {
             return res.status(404).json('Movie not found');
@@ -17,11 +21,7 @@ exports.createReview = async (req, res) =>{
         if (!movie) {
             return res.status(404).json('Movie not found');
         }
-        const user = await User.findById(userId);
-        if (!user) {
-            return res.status(404).json('User not found');
-        }
-
+    
         const newReview = new Review({
             movieId,
             userId,
