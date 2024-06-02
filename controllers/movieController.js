@@ -1,4 +1,6 @@
 const Movie = require('../models/movieModel');
+const Review = require('../models/reviewModel');
+const mongoose = require('mongoose')
 
 exports.createMovie = async (req, res) => {
     try {
@@ -58,6 +60,15 @@ exports.deleteMovie = async (req, res) =>{
         }
         res.status(200).json('Movie Deleted');
 
+    } catch (error) {
+        res.status(500).json(error);
+    }
+}
+exports.getReviewsForMovie = async (req, res) =>{
+    try {
+        const { id } = req.params;
+        const reviews = await Review.find({ movieId: id });
+        res.status(200).json(reviews);
     } catch (error) {
         res.status(500).json(error);
     }

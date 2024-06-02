@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 const app = express();
 app.use(express.json());
 
-//models
+//routes
 const userRoutes = require('./routes/userRoutes');
 const movieRoutes = require('./routes/movieRoutes');
 const reviewRoutes = require('./routes/reviewRoutes');

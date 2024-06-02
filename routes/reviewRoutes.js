@@ -1,23 +1,13 @@
 const express = require('express');
 const router = express.Router();
+const auth = require('../middleware/auth')
+const reviewController = require('../controllers/reviewController')
 
-const Review = require('../models/reviewModel')
-
-router.post('/reviews', (req,res) =>{
-
-})
-router.get('/reviews', (req,res) =>{
-
-})
-router.get('/reviews:id', (req,res) =>{
-
-})
-router.put('/reviews:id', (req,res) =>{
-
-})
-router.delete('/reviews:id', (req,res) =>{
-
-})
+router.post('/reviews', auth.verifyToken, reviewController.createReview)
+router.get('/reviews', auth.verifyToken, reviewController.getAllReviews)
+router.get('/reviews/:id', auth.verifyToken, reviewController.getOneReview)
+router.put('/reviews/:id', auth.verifyToken, reviewController.updateReview)
+router.delete('/reviews/:id', auth.verifyToken, reviewController.deleteReview)
 
 
 module.exports = router;
