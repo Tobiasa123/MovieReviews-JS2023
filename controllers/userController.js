@@ -3,9 +3,16 @@ const User = require('../models/userModel')
 const jwt = require('jsonwebtoken')
 const secretkey = process.env.SECRET_KEY
 
+//register a user
 exports.registerUser = async (req, res) => {
     try {
         const { username, email, password, role } = req.body;
+
+        const existingUser = await User.findOne({ $or: [{ username }, { email }] });
+        if (existingUser) {
+            return res.status(400).json({ error: 'Username or email already exists' });
+        }
+
         const newUser = new User({ username, email, password, role });
         await newUser.save();
         res.status(201).json("New user registered!");
@@ -13,6 +20,7 @@ exports.registerUser = async (req, res) => {
         res.status(400).json({ error: error.message });
     }
 };
+//log in a user & assign token
 exports.loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;

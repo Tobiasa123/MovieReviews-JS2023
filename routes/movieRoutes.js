@@ -4,6 +4,7 @@ const {isAdmin} = require('../middleware/isAdmin')
 const movieController = require('../controllers/movieController');
 const auth = require('../middleware/auth')
 
+//check if user is admin on functionality specifically requested by client
 
 router.post('/movies', auth.verifyToken, isAdmin, movieController.createMovie);
 router.get('/movies', auth.verifyToken, movieController.getAllMovies);

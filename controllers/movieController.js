@@ -1,7 +1,7 @@
 const Movie = require('../models/movieModel');
 const Review = require('../models/reviewModel');
-const mongoose = require('mongoose')
 
+//create movie
 exports.createMovie = async (req, res) => {
     try {
         const movie = new Movie(req.body);
@@ -11,7 +11,7 @@ exports.createMovie = async (req, res) => {
         res.status(400).json(error);
     }
 };
-
+//get all movies
 exports.getAllMovies = async (req, res) => {
     try {
         const movies = await Movie.find();
@@ -23,7 +23,7 @@ exports.getAllMovies = async (req, res) => {
         res.status(500).json(error);
     }
 };
-
+//get movie by id
 exports.getMovieById = async (req, res) => {
     try {
         const movie = await Movie.findById(req.params.id);
@@ -35,7 +35,7 @@ exports.getMovieById = async (req, res) => {
         res.status(500).json(error);
     }
 };
-
+//update specified movie
 exports.updateMovie = async (req, res) => {
     try {
         const { title, director, releaseYear, genre } = req.body;
@@ -52,9 +52,10 @@ exports.updateMovie = async (req, res) => {
         res.status(500).json(error);
     }
 };
+//delete specified movie
 exports.deleteMovie = async (req, res) =>{
     try {
-        const movie = await Movie.findOneAndDelete(req.params.id)
+        const movie = await Movie.findOneAndDelete({ _id: req.params.id })
         if (!movie) {
             return res.status(404).json('Movie not found');
         }
@@ -64,16 +65,20 @@ exports.deleteMovie = async (req, res) =>{
         res.status(500).json(error);
     }
 }
+//get all reviews for specified movie
 exports.getReviewsForMovie = async (req, res) =>{
     try {
         const { id } = req.params;
         const reviews = await Review.find({ movieId: id });
+        if(reviews.length === 0){
+            return res.status(404).json("No reviews yet")
+        }
         res.status(200).json(reviews);
     } catch (error) {
         res.status(500).json(error);
     }
 }
-
+//get average rating of all movies, if none result is null
 exports.getAverageRatings = async (req, res) => {
     try {
         const averageRatings = await Movie.aggregate([

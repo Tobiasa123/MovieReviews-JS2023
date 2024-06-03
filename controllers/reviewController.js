@@ -3,12 +3,11 @@ const Movie = require('../models/movieModel');
 const User = require('../models/userModel');
 const mongoose = require('mongoose');
 
-//userid is extracted from token not req.body
+//create review, if logged in userid is already applied so dont need to specify in body
 exports.createReview = async (req, res) =>{
     try{
         const { movieId, rating, comment } = req.body;
         
-        //få userid
         const userId = req.user.userId;
 
         if (!mongoose.Types.ObjectId.isValid(movieId)) {
@@ -37,16 +36,19 @@ exports.createReview = async (req, res) =>{
     }
 }
 
-//hämtar alla reviews, inte detaljerad med title etc som när man specifierar med id som nedan
+//get all reviews
 exports.getAllReviews = async (req, res) =>{
     try {
         const reviews = await Review.find();
+        if (reviews.length === 0) {
+            return res.status(404).json('No reviews found');
+        }
         res.status(200).json(reviews);
     } catch (error) {
         res.status(500).json(error);
     }
 }
-// mer detaljerad review med info om movie och användare
+//get specified review, more detailed then get all
 exports.getOneReview = async (req, res) =>{
     try {
         const review = await Review.findById(req.params.id).populate('movieId').populate({path: 'userId', select: 'username'});
@@ -58,6 +60,7 @@ exports.getOneReview = async (req, res) =>{
         res.status(500).json(error);
     }
 }
+//update specified review
 exports.updateReview = async (req, res) =>{
     try {
         const { rating, comment } = req.body;
@@ -77,6 +80,7 @@ exports.updateReview = async (req, res) =>{
         res.status(500).json(error);
     }
 }
+//delete specified review
 exports.deleteReview = async (req, res) =>{
     try {
         const review = await Review.findByIdAndDelete(req.params.id)
