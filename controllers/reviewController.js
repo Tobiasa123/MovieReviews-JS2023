@@ -3,7 +3,7 @@ const Movie = require('../models/movieModel');
 const User = require('../models/userModel');
 const mongoose = require('mongoose');
 
-//create review, if logged in userid is already applied so dont need to specify in body
+//create review, if logged in userid is already applied so no need to specify in body
 exports.createReview = async (req, res) =>{
     try{
         const { movieId, rating, comment } = req.body;
@@ -48,7 +48,7 @@ exports.getAllReviews = async (req, res) =>{
         res.status(500).json(error);
     }
 }
-//get specified review, more detailed then get all
+//get specified review, more detailed than get all
 exports.getOneReview = async (req, res) =>{
     try {
         const review = await Review.findById(req.params.id).populate('movieId').populate({path: 'userId', select: 'username'});

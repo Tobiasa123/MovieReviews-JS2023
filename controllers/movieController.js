@@ -78,7 +78,7 @@ exports.getReviewsForMovie = async (req, res) =>{
         res.status(500).json(error);
     }
 }
-//get average rating of all movies, if none result is null
+//get average rating of all movies, if unreviewed result is null
 exports.getAverageRatings = async (req, res) => {
     try {
         const averageRatings = await Movie.aggregate([

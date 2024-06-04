@@ -20,7 +20,7 @@ exports.registerUser = async (req, res) => {
         res.status(400).json({ error: error.message });
     }
 };
-//log in a user & assign token
+//login a user & assign token
 exports.loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;

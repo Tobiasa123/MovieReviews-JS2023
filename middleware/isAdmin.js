@@ -1,4 +1,3 @@
-
 exports.isAdmin = (req, res, next) => {
 
     const userRole = req.user.role;
